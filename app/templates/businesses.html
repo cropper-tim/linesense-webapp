@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block metas %}
+<meta id='user_data' data-user_id="{{ current_user.id }}">
+{% endblock %}
+
+{% block app_content %}
+
+<h1>All Businesses</h1>
+
+<table id="business_table" class="table table-hover">
+    <tr>
+        <th>Business</th>
+        <th>Customers in Line</th>
+        <th>Last Updated</th>
+        <th>Estimated Wait Time</th>
+    </tr>
+    {% for business in businesses %}
+    {% set time = business.customercounts.order_by("customer_count_timestamp DESC").first().timestamp %}
+    <tr>
+        <td><a href="{{ url_for('business_page', business_name=business.name) }}">{{ business.name }}</a></td>
+        <td>{{ business.customercounts.order_by("customer_count_timestamp DESC").first().customer_count }}</td>
+        <td style="color: gray">
+            {% if time %}
+            {{ moment(time).fromNow() }}
+            {% else %}
+            No recent data for this business
+            {% endif %}
+        </td>
+        <td>{{ "%.2d" | format(business.predictions.order_by("prediction_timestamp DESC").first().wait_time/60) }}
+            minutes</td>
+        {% if current_user.is_authenticated %}
+        <td>
+            {% if current_user.is_following(business.id) %}
+            <a class="btn btn-sm btn-warning" href="{{ url_for('unfollow', business_id=business.id) }}">Unfollow</a>
+            {% else %}
+            <a class="btn btn-sm btn-primary" href="{{ url_for('follow', business_id=business.id) }}">Follow</a>
+            {% endif %}
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
+
+{% block scripts %}
+<script type=" text/javascript" src="{{ url_for('static', filename='main.js') }}"></script>
+{{ super() }}
+{% endblock %}

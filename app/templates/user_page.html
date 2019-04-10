@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block metas %}
+<meta id='user_data' data-user_id="{{ current_user.id }}">
+{% endblock %}
+
+{% block app_content %}
+
+<h1>{{ user.username }}</h1>
+
+{% if user.follows.all()|length %}
+<table id="business_table" class="table table-hover">
+    <tr>
+        <th>Business</th>
+        <th>Customers in Line</th>
+        <th>Last Updated</th>
+        <th>Estimated Wait Time</th>
+        <th width="305px">Are you in line?</th>
+    </tr>
+    {% for business in user.follows %}
+    {% set time = business.customercounts.order_by("customer_count_timestamp DESC").first().timestamp %}
+    <tr>
+        <td><a href="{{ url_for('business_page', business_name=business.name) }}">{{ business.name }}</a></td>
+        <td>{{ business.customercounts.order_by("customer_count_timestamp DESC").first().customer_count }}</td>
+        <td style="color: gray">
+            {% if time %}
+            {{ moment(time).fromNow() }}
+            {% else %}
+            No recent data for this business
+            {% endif %}
+        </td>
+        <td>{{ "%.2d" | format(business.predictions.order_by("prediction_timestamp DESC").first().wait_time/60) }}
+            minutes</td>
+        <td>
+            <div class="btn-group"><button type=" button" data-user="{{ current_user.username }}"
+                    data-business="{{ business.id }}" class="in_line_button btn btn-info btn-sm"
+                    id="business_button_{{business.id}}">Just got in
+                    line!</button>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<h2>It looks like you're not following any businesses! Check out <a href="{{ url_for('businesses') }}">the
+        businesses page</a> for a list of businesses that are using
+    LineSense.</h2>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script type=" text/javascript" src="{{ url_for('static', filename='main.js') }}"></script>
+{{ super() }}
+{% endblock %}

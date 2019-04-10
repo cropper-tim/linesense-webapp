@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+<div class="container-fluid" style="background-color:rgb(0, 211, 200);color:#fff;height:200px;">
+    <img src="{{ url_for('static', filename='logo_transparent.png') }}" alt="Responsive image"
+        class="img-fluid center-block" style="max-height: 100%;" />
+</div>
+{{ super() }}
+{% endblock %}
+
+{% block app_content %}
+<h1>LineSense</h1>
+
+<!-- <div class=" container-fluid no-padding">
+    <div class="row">
+        <div class="col-md-12">
+            <img src="{{ url_for('static', filename='twitter_header_photo_1.png') }}" alt="placeholder 960"
+                class="img-responsive" />
+        </div>
+    </div>
+</div> -->
+
+
+
+<p>
+    LineSense is a business tool for monitoring consumer traffic in a line. Frequently, customers will travel to a
+    restaurant and other locations just to be met with a line that wraps around the store. Waiting in a long line is
+    unreasonable for people who have busy schedules and can’t spare time just waiting around. If only there was a way to
+    know how long the line is before making the trip—that’s where LineSense comes in.
+</p>
+<p>
+    With LineSense, users will be be able to view the current length of a line without ever leaving their chair. In
+    addition, there will be a display at the end of the line to inform customers of the estimated wait time until they
+    will be served.
+</p>
+<p>
+    LineSense works by using a camera along with object detection algorithms to identify how many customers are
+    currently in line at any given time. LineSense will also determine the approximate wait time for customers. These
+    numbers are stored in a database and used in prediction algorithms that approximate the current wait time. These
+    values can then be viewed on the LineSense web application by customers and management. LineSense also comes with a
+    stationary display that is placed in the line to inform customers of the estimated wait time from that position.
+    Customers will be able to see if they have enough time to wait in the line without having to guess. Management can
+    use LineSense to determine staffing and service needs during different hours of the day, and to see if improvements
+    can be made that would help speed up the line during rushes.
+</p>
+{% endblock %}

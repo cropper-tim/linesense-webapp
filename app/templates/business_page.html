@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block metas %}
+<meta id='user_data' data-user_id="{{ current_user.id }}">
+{% endblock %}
+
+{% block app_content %}
+<header style="position:relative;">
+    <h1 style="display:inline-block">{{ business.name }}</h1>
+
+    {% if is_following %}
+    <a style="position:absolute; bottom:0; right:0; margin:10px;" class="btn btn-sm btn-warning"
+        href="{{ url_for('unfollow', business_id=business.id) }}">Unfollow</a>
+    {% else %}
+    <a style="position:absolute; bottom:0; right:0;margin:10px;" class="btn btn-sm btn-primary"
+        href="{{ url_for('follow', business_id=business.id) }}">Follow</a>
+    {% endif %}
+</header>
+
+<table class="table table-hover">
+    <tr>
+        <th>Customers in Line</th>
+        <th>Last Updated</th>
+        <th>Estimated Wait Time</th>
+        <th width="305px">Are you in line?</th>
+    </tr>
+    {% set time = business.customercounts.order_by("customer_count_timestamp DESC").first().timestamp %}
+    <tr>
+        <td>{{ business.customercounts.order_by("customer_count_timestamp DESC").first().customer_count }}</td>
+        <td style="color: gray">
+            {% if time %}
+            {{ moment(time).fromNow() }}
+            {% else %}
+            No recent data for this business
+            {% endif %}
+        </td>
+        <td>{{ "%.2d" | format(business.predictions.order_by("prediction_timestamp DESC").first().wait_time/60) }}
+            minutes</td>
+        <td>
+            <div class="btn-group"><button type=" button" data-user="{{ current_user.username }}"
+                    data-business="{{ business.id }}" class="in_line_button btn btn-info btn-sm"
+                    id="business_button_{{business.id}}">Just got in
+                    line!</button></div>
+        </td>
+
+    </tr>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<script type=" text/javascript" src="{{ url_for('static', filename='main.js') }}"></script>
+{{ super() }}
+{% endblock %}
