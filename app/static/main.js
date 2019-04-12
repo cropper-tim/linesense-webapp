@@ -141,3 +141,5 @@ function makeHandler(httpRequest, retCode, action) {
 }
 
 set_buttons(in_line_buttons, set_in_line_buttons);
+
+setInterval(function () { location.reload(); }, 60000);
