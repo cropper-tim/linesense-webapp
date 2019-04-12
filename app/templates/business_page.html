@@ -26,6 +26,7 @@
     </tr>
     {% set time = business.customercounts.order_by("customer_count_timestamp DESC").first().timestamp %}
     <tr>
+        {% if business.customercounts.order_by("customer_count_timestamp DESC").first() %}
         <td>{{ business.customercounts.order_by("customer_count_timestamp DESC").first().customer_count }}</td>
         <td style="color: gray">
             {% if time %}
@@ -36,6 +37,11 @@
         </td>
         <td>{{ "%.2d" | format(business.predictions.order_by("prediction_timestamp DESC").first().wait_time/60) }}
             minutes</td>
+        {% else %}
+        <td>We don't have any data for this business yet.</td>
+        <td></td>
+        <td></td>
+        {% endif %}
         <td>
             <div class="btn-group"><button type=" button" data-user="{{ current_user.username }}"
                     data-business="{{ business.id }}" class="in_line_button btn btn-info btn-sm"

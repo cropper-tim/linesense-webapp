@@ -68,14 +68,14 @@ def businesses():
     businesses = Business.query.order_by(Business.name.desc()).all()
     return render_template("businesses.html", title="Our Businesses", businesses=businesses)
 
-@app.route("/businesses/<business_name>/")
+@app.route("/businesses/<business_id>/")
 @login_required
-def business_page(business_name):
+def business_page(business_id):
     is_following = False
-    business = Business.query.filter_by(name=business_name).join(Prediction).first_or_404()
+    business = Business.query.filter_by(id=business_id).join(Prediction).first_or_404()
     if business in current_user.follows:
         is_following = True
-    return render_template("business_page.html", title=business_name, business=business, is_following=is_following)
+    return render_template("business_page.html", title=business.name, business=business, is_following=is_following)
 
 @app.errorhandler(404)
 def not_found_error(error):
