@@ -60,7 +60,6 @@ def create_account():
 @login_required
 def user_page(username):
     user = Customer.query.filter_by(username=username).first_or_404()
-    [print(x) for x in user.follows]
     return render_template("user_page.html", title=user.username, user=user)
 
 @app.route("/businesses/")
@@ -154,8 +153,6 @@ def customer_count():
     for inputs in user_inputs:
         # get the time the user got in line
         start_time = calc_in_line_time(inputs.timestamp, inputs.wait_duration)
-
-        print('[debug] business id={} and start_time={}'.format(businessID, start_time))
 
         # get the line length for when the user got in line
         count = CustomerCount.query.filter((CustomerCount.business_id==businessID) & (CustomerCount.timestamp<=start_time)).first()
