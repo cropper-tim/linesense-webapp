@@ -146,7 +146,7 @@ def customer_count():
 
     # get a max of the last 50 customer inputs
     user_inputs = UserInput.query.filter_by(business_id=businessID).order_by(UserInput.timestamp.desc()).limit(50).all()
-    print(user_inputs)
+    [print(x) for x in user_inputs]
 
     # calculate service rate per person for each user input
     total_waits = []
